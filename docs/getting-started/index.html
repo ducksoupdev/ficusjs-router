@@ -64,35 +64,66 @@
       </ul>    </aside>
     <article class="doc__content">
       <h1>Getting started</h1>
-<p>The easiest way to try out FicusJS router is using a hello world example.</p>
+<p>The easiest way to try out FicusJS router is using a simple example.</p>
 <p>Create an <code>index.html</code> file and copy the following between the <code>&lt;body&gt;</code> tags.</p>
-<pre><code class="language-html">&lt;hello-world&gt;&lt;/hello-world&gt;
+<pre><code class="language-html">&lt;top-nav&gt;&lt;/top-nav&gt;
+&lt;div id=&quot;router-outlet&quot;&gt;&lt;/div&gt;
 
 &lt;script type=&quot;module&quot;&gt;
-import { render as renderer, html } from 'https://unpkg.com/lit-html?module'
+import { createRouter } from 'https://unpkg.com/ficusjs-router?module'
 import { createComponent } from 'https://unpkg.com/ficusjs?module'
+import { render as renderer, html } from 'https://unpkg.com/lit-html?module'
 
-createComponent('hello-world', {
+createComponent('home-page', {
   renderer,
-  handleClick (e) {
-    window.alert('Hello to you!')
+  render () {
+    return html`&lt;div&gt;Welcome to the home page!&lt;/div&gt;`
+  }
+})
+
+createComponent('page-one', {
+  renderer,
+  render () {
+    return html`&lt;div&gt;Welcome to the page one!&lt;/div&gt;`
+  }
+})
+
+createComponent('page-two', {
+  renderer,
+  render () {
+    return html`&lt;div&gt;Welcome to the page two!&lt;/div&gt;`
+  }
+})
+
+const router = createRouter([
+  { path: '', component: 'home-page' },
+  { path: '/one', component: 'page-one' },
+  { path: '/two', component: 'page-two' }
+], '#router-outlet', { mode: 'hash' })
+
+createComponent('top-nav', {
+  renderer,
+  navigateTo (path) {
+    router.push(path)
   },
   render () {
-    return html`&lt;div&gt;
-&lt;p&gt;Test component&lt;/p&gt;
-&lt;button type=&quot;button&quot; @click=&quot;${this.handleClick}&quot;&gt;Click me!&lt;/button&gt;
-&lt;/div&gt;`
+    return html`
+      &lt;nav&gt;
+        &lt;ul&gt;
+          &lt;li&gt;&lt;button type=&quot;button&quot; @click=&quot;${() =&gt; this.navigateTo('/')}&quot;&gt;Home&lt;/button&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;button type=&quot;button&quot; @click=&quot;${() =&gt; this.navigateTo('/one')}&quot;&gt;Page one&lt;/button&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;button type=&quot;button&quot; @click=&quot;${() =&gt; this.navigateTo('/two')}&quot;&gt;Page two&lt;/button&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/nav&gt;
+    `
   }
 })
 &lt;/script&gt;
 </code></pre>
 <blockquote>
-<p>Alternatively, fork this Codepen to see it in action - <a href="https://codepen.io/ducksoupdev/pen/GRZPqJO">https://codepen.io/ducksoupdev/pen/GRZPqJO</a></p>
+<p>Alternatively, fork this Codepen to see it in action - <a href="https://codepen.io/ducksoupdev/pen/PoNvGwK">https://codepen.io/ducksoupdev/pen/PoNvGwK</a></p>
 </blockquote>
-<p>The hello world example creates a new <a href="https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements">custom element</a>
-using the <code>createComponent</code> function and registers it to the <code>hello-world</code> tag. It uses the <a href="https://www.npmjs.com/package/lit-html">lit-html</a> renderer for creating HTML from <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals">tagged template literals</a>.</p>
-<p>Once registered, the tag can be used multiple times in HTML and instances can be programmatically obtained using <a href="https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector"><code>document.querySelector</code></a>
-or <a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelector"><code>element.querySelector</code></a></p>
+<p>The example creates a set of page components, a page navigation component and a new router using hash mode.</p>
 
     </article>
   </div>
